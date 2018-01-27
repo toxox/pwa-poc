@@ -5,6 +5,7 @@
       <v-card-title primary-title>
         <div>
           <h3 class="headline mb-0">{{product.name}}</h3>
+          <h4 class="subheading">${{product.price}}</h4>
         </div>
       </v-card-title>
       <v-card-actions>
