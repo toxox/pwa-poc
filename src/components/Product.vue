@@ -9,7 +9,7 @@
         </div>
       </v-card-title>
       <v-card-actions>
-        <v-btn color="orange">Add to Cart</v-btn>
+        <v-btn @click="addToCart(product)" color="orange">Add to Cart</v-btn>
       </v-card-actions>
     </v-card>
 </v-flex>
@@ -20,6 +20,7 @@ export default {
   name: 'product',
   props: {
     product: Object,
+    addToCart: Function,
   },
 };
 </script>

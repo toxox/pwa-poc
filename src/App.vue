@@ -88,8 +88,14 @@
             v-for="product in products"
             :product="product" 
             :key="product.id"
+            :addToCart="addToCart"
           />
         </v-layout>
+
+        <p v-for="cartItem in cart" :key="cartItem.product.id">
+          {{cartItem.product.name}} -- {{cartItem.quantity}}
+        </p>
+        <p>Price: {{calculatePrice(cart)}}</p>
       </v-container>
     </v-content>
   </v-app>
@@ -112,6 +118,7 @@ export default {
       { icon: 'history', text: 'Frequently contacted' },
       { icon: 'content_copy', text: 'Duplicates' },
     ],
+    cart: [],
   }),
   mounted() {
     this.isLoading = true;
@@ -119,6 +126,24 @@ export default {
       this.isLoading = false;
       this.products = data;
     });
+  },
+  methods: {
+    addToCart(product) {
+      const cartIndex = this.cart.findIndex(cartItem => cartItem.product.id === product.id);
+      if (cartIndex === -1) {
+        this.cart.push({
+          product,
+          quantity: 1,
+        });
+        return;
+      }
+      this.cart[cartIndex].quantity += 1;
+    },
+    calculatePrice(cart) {
+      return cart.reduce(
+        (total, cartItem) => total + (cartItem.product.price * cartItem.quantity),
+        0);
+    },
   },
 };
 </script>
