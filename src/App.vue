@@ -79,33 +79,46 @@
       </div>
     </v-toolbar>
     <v-content>
-      <v-container fluid fill-height>
+      <v-container v-if="isLoading" fill-height justify-center>
+        <v-progress-circular :indeterminate="true" color="amber darken-3" />
+      </v-container>
+      <v-container v-else fluid grid-list-md>
+        <v-layout row wrap>
+          <product
+            v-for="product in products"
+            :product="product" 
+            :key="product.id"
+          />
+        </v-layout>
       </v-container>
     </v-content>
-    <v-btn
-      fab
-      bottom
-      right
-      color="amber darken-3"
-      dark
-      fixed
-      @click.stop="dialog = !dialog"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>
   </v-app>
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      dialog: false,
-      drawer: false,
-      items: [
-        { icon: 'contacts', text: 'Contacts' },
-        { icon: 'history', text: 'Frequently contacted' },
-        { icon: 'content_copy', text: 'Duplicates' },
-      ],
-    }),
-  };
+import getAllProducts from './services/products';
+import Product from './components/Product';
+
+export default {
+  components: {
+    product: Product,
+  },
+  data: () => ({
+    drawer: false,
+    products: [],
+    isLoading: false,
+    items: [
+      { icon: 'contacts', text: 'Contacts' },
+      { icon: 'history', text: 'Frequently contacted' },
+      { icon: 'content_copy', text: 'Duplicates' },
+    ],
+  }),
+  mounted() {
+    this.isLoading = true;
+    getAllProducts().then(({ data }) => {
+      this.isLoading = false;
+      this.products = data;
+    });
+  },
+};
 </script>
