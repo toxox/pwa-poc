@@ -89,6 +89,8 @@
             :product="product" 
             :key="product.id"
             :addToCart="addToCart"
+            :removeFromCart="removeFromCart"
+            :quantityInCart="quantityInCart(product)"
           />
         </v-layout>
 
@@ -128,8 +130,11 @@ export default {
     });
   },
   methods: {
+    findProductIndex(product) {
+      return this.cart.findIndex(cartItem => cartItem.product.id === product.id);
+    },
     addToCart(product) {
-      const cartIndex = this.cart.findIndex(cartItem => cartItem.product.id === product.id);
+      const cartIndex = this.findProductIndex(product);
       if (cartIndex === -1) {
         this.cart.push({
           product,
@@ -138,6 +143,21 @@ export default {
         return;
       }
       this.cart[cartIndex].quantity += 1;
+    },
+    removeFromCart(product) {
+      const cartIndex = this.findProductIndex(product);
+      if (cartIndex === -1) return;
+
+      if (this.cart[cartIndex].quantity === 1) {
+        this.cart.splice(cartIndex);
+        return;
+      }
+
+      this.cart[cartIndex].quantity -= 1;
+    },
+    quantityInCart(product) {
+      const cartIndex = this.findProductIndex(product);
+      return cartIndex === -1 ? 0 : this.cart[cartIndex].quantity;
     },
     calculatePrice(cart) {
       return cart.reduce(
