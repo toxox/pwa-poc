@@ -1,5 +1,12 @@
 <template>
-  <v-flex xs12 sm6 :md3="cartView ? false : true" lg3 :md12="cartView ? true : false">
+  <v-flex 
+    xs12
+    sm6
+    :md3="cartView ? false : true"
+    :md12="cartView ? true : false"
+    :lg3="cartView ? false : true"
+    :lg12="cartView ? true : false"
+  >
     <v-card>
       <v-card-media :src="product.image" height="150px" />
       <v-card-title primary-title>

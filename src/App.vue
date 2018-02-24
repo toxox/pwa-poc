@@ -12,6 +12,7 @@
         :addToCart="addToCart"
         :removeFromCart="removeFromCart"
         :quantityInCart="quantityInCart" 
+        :total="calculatePrice(cart)"
       />
     </v-navigation-drawer>
 
@@ -50,11 +51,7 @@
             :quantityInCart="quantityInCart(product)"
           />
         </v-layout>
-
-        <p v-for="cartItem in cart" :key="cartItem.product.id">
-          {{cartItem.product.name}} -- {{cartItem.quantity}}
-        </p>
-        <p>Price: {{calculatePrice(cart)}}</p>
+        
         <v-fab-transition>
            <v-btn fab dark color="blue" class="order-float" v-show="!isCartVisible" >
              <v-icon dark>done</v-icon>

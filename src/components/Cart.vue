@@ -13,6 +13,7 @@
         cartView
       />
     </template>
+    <div class="text-xs-left total">Total: ${{total}}</div>
     <v-btn color="info" style="width: 100%" dark large>Place Order!</v-btn>
   </div>
 </template>
@@ -36,13 +37,18 @@ export default {
     addToCart: Function,
     removeFromCart: Function,
     quantityInCart: Function,
+    total: Number,
   },
 };
 </script>
 
 <style scoped>
   .empty-cart {
-    color: #eeeeee;
+    color: #686868;
+    margin-top: 100px;
+  }
+  .total {
+    margin: 10px 0 5px 10px;
   }
 </style>
 
