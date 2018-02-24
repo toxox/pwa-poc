@@ -55,6 +55,11 @@
           {{cartItem.product.name}} -- {{cartItem.quantity}}
         </p>
         <p>Price: {{calculatePrice(cart)}}</p>
+        <v-fab-transition>
+           <v-btn fab dark color="blue" class="order-float" v-show="!isCartVisible" >
+             <v-icon dark>done</v-icon>
+          </v-btn>
+        </v-fab-transition>
       </v-container>
     </v-content>
   </v-app>
@@ -124,3 +129,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .order-float {
+    position: fixed;
+    right: 10px;
+    bottom: 35px;
+  }
+</style>
+

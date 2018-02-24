@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs12 sm6 md3 lg3>
+  <v-flex xs12 sm6 :md3="cartView ? false : true" lg3 :md12="cartView ? true : false">
     <v-card>
       <v-card-media :src="product.image" height="150px" />
       <v-card-title primary-title>
@@ -36,6 +36,7 @@ export default {
     addToCart: Function,
     removeFromCart: Function,
     quantityInCart: Number,
+    cartView: Boolean,
   },
 };
 </script>
