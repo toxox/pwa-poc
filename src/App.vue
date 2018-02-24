@@ -51,14 +51,28 @@
             :quantityInCart="quantityInCart(product)"
           />
         </v-layout>
-        
+
         <v-fab-transition>
-           <v-btn fab dark color="blue" class="order-float" v-show="!isCartVisible" >
+           <v-btn
+            fab
+            dark
+            color="blue"
+            class="order-float"
+            v-show="!isCartVisible && !isCartEmpty"
+            @click="changeOrderFormVisibility"
+           >
              <v-icon dark>done</v-icon>
           </v-btn>
         </v-fab-transition>
       </v-container>
     </v-content>
+
+    <v-dialog v-model="orderFormVisible" width="800px">
+      <order-form
+        :total="calculatePrice(cart)"
+        :hideForm="changeOrderFormVisibility"
+      />
+    </v-dialog>
   </v-app>
 </template>
 
@@ -66,17 +80,20 @@
 import getAllProducts from './services/products';
 import Product from './components/Product';
 import Cart from './components/Cart';
+import OrderForm from './components/OrderForm';
 
 export default {
   components: {
     product: Product,
     cart: Cart,
+    orderForm: OrderForm,
   },
   data: () => ({
     products: [],
     isLoading: false,
     cart: [],
     isCartVisible: false,
+    orderFormVisible: false,
   }),
   mounted() {
     this.isLoading = true;
@@ -84,6 +101,11 @@ export default {
       this.isLoading = false;
       this.products = data;
     });
+  },
+  computed: {
+    isCartEmpty() {
+      return this.calculateTotalProducts(this.cart) === 0;
+    },
   },
   methods: {
     findProductIndex(product) {
@@ -122,6 +144,9 @@ export default {
     },
     calculateTotalProducts(cart) {
       return cart.reduce((total, cartItem) => total + cartItem.quantity, 0);
+    },
+    changeOrderFormVisibility() {
+      this.orderFormVisible = !this.orderFormVisible;
     },
   },
 };
