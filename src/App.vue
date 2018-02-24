@@ -103,7 +103,7 @@ export default {
       if (cartIndex === -1) return;
 
       if (this.cart[cartIndex].quantity === 1) {
-        this.cart.splice(cartIndex);
+        this.cart.splice(cartIndex, 1);
         return;
       }
 
