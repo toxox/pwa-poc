@@ -65,17 +65,20 @@
       <h4 class="total">${{total}}</h4>
       <v-spacer></v-spacer>
       <v-btn flat color="primary" @click="hideForm">Cancel</v-btn>
-      <v-btn @click="placeOrder" flat>Save</v-btn>
+      <v-btn @click="placeOrder" flat>Order</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+import placeOrder from '../services/orders';
+
 export default {
   name: 'orderForm',
   props: {
     total: Number,
     hideForm: Function,
+    clearCart: Function,
   },
   data() {
     return {
@@ -95,7 +98,23 @@ export default {
   },
   methods: {
     placeOrder() {
-      this.$refs.form.validate();
+      if (this.$refs.form.validate()) {
+        const { name, address, email, phone, notes } = this;
+        placeOrder({ name, address, email, phone, notes })
+          .then(() => {
+            this.$refs.form.reset();
+            this.clearForm();
+            this.clearCart();
+            this.hideForm();
+          });
+      }
+    },
+    clearForm() {
+      this.name = '';
+      this.address = '';
+      this.email = '';
+      this.phone = '';
+      this.notes = '';
     },
   },
 };

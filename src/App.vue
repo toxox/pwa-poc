@@ -71,6 +71,7 @@
       <order-form
         :total="calculatePrice(cart)"
         :hideForm="changeOrderFormVisibility"
+        :clearCart="clearCart"
       />
     </v-dialog>
   </v-app>
@@ -132,6 +133,9 @@ export default {
       }
 
       this.cart[cartIndex].quantity -= 1;
+    },
+    clearCart() {
+      this.cart = [];
     },
     quantityInCart(product) {
       const cartIndex = this.findProductIndex(product);
