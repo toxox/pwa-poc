@@ -1,6 +1,15 @@
 import axios from 'axios';
 import BASE_URL from './api';
 
-const getAllProducts = () => axios.get(`${BASE_URL}/products.json`);
+export const getAllProducts = () =>
+  axios.get(`${BASE_URL}/products.json`)
+    .then(({ data }) => {
+      localStorage.setItem('products', JSON.stringify(data));
+      return data;
+    });
 
-export default getAllProducts;
+export const getAllProductsFromCache = () =>
+  new Promise((resolve) => {
+    const products = localStorage.getItem('products');
+    return resolve(JSON.parse(products));
+  });

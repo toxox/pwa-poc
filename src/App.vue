@@ -24,7 +24,7 @@
       fixed
     >
       <v-toolbar-title :style="$vuetify.breakpoint.smAndUp ? 'width: 300px; min-width: 250px' : 'min-width: 72px'" class="ml-0 pl-3">
-        <span class="hidden-xs-only">Cool Food</span>
+        <span class="hidden-xs-only">Sushi from Antoshi</span>
       </v-toolbar-title>
       <div class="d-flex align-center" style="margin-left: auto">
         <v-btn @click.stop="isCartVisible = !isCartVisible" icon>
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import getAllProducts from './services/products';
+import { getAllProducts, getAllProductsFromCache } from './services/products';
 import Product from './components/Product';
 import Cart from './components/Cart';
 import OrderForm from './components/OrderForm';
@@ -95,17 +95,46 @@ export default {
     cart: [],
     isCartVisible: false,
     orderFormVisible: false,
+    onLine: false,
   }),
   mounted() {
-    this.isLoading = true;
-    getAllProducts().then(({ data }) => {
-      this.isLoading = false;
-      this.products = data;
-    });
+    this.updateConnectionStatus();
+    window.addEventListener('online', this.updateConnectionStatus);
+    window.addEventListener('offline', this.updateConnectionStatus);
+
+    if (this.onLine) {
+      getAllProductsFromCache()
+        .then((cachedProducts) => {
+          this.products = cachedProducts || [];
+          return getAllProducts();
+        }).then((productsFromApi) => {
+          this.products = productsFromApi;
+        })
+        .catch(() => {
+          this.products = [];
+        });
+    } else {
+      getAllProductsFromCache()
+        .then((cachedProducts) => {
+          this.products = cachedProducts;
+        }).catch(() => {
+          this.products = [];
+        });
+    }
   },
   computed: {
     isCartEmpty() {
       return this.calculateTotalProducts(this.cart) === 0;
+    },
+  },
+  watch: {
+    onLine(newStatus, oldStatus) {
+      if (newStatus && !oldStatus) {
+        getAllProducts()
+          .then((productsFromApi) => {
+            this.products = productsFromApi;
+          });
+      }
     },
   },
   methods: {
@@ -151,6 +180,9 @@ export default {
     },
     changeOrderFormVisibility() {
       this.orderFormVisible = !this.orderFormVisible;
+    },
+    updateConnectionStatus() {
+      this.onLine = navigator.onLine;
     },
   },
 };
